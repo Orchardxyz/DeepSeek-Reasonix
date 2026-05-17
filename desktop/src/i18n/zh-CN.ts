@@ -213,6 +213,14 @@ export const zhCN: typeof en = {
     reviewDesc: "每次写入都要确认",
     autoDesc: "改文件自动，命令仍要确认",
     yoloDesc: "全部放行",
+    reviewHint: "每个工具调用都需要批准",
+    autoHint: "命中白名单的命令自动批准",
+    yoloHint: "全部自动批准 · 谨慎使用",
+  },
+  preset: {
+    autoDesc: "Flash → Pro 自动升级",
+    flashDesc: "快、便宜、长上下文",
+    proDesc: "深度推理",
   },
   checkpoint: {
     title: "步骤已完成",

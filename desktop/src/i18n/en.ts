@@ -225,6 +225,14 @@ export const en = {
     reviewDesc: "approve every write",
     autoDesc: "auto edits, approve commands",
     yoloDesc: "auto everything",
+    reviewHint: "Every tool call needs approval",
+    autoHint: "Commands matching the allowlist are auto-approved",
+    yoloHint: "All auto-approved · Use with caution",
+  },
+  preset: {
+    autoDesc: "Flash → Pro auto-upgrade",
+    flashDesc: "Fast, cheap, long context",
+    proDesc: "Deep reasoning",
   },
   checkpoint: {
     title: "Step complete",
