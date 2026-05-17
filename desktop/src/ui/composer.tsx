@@ -185,7 +185,7 @@ export function Composer({
           filter === "image"
             ? [
                 {
-                  name: "图片",
+                  name: t("composer.imageFilterName"),
                   extensions: ["png", "jpg", "jpeg", "gif", "webp", "svg"],
                 },
               ]
@@ -337,7 +337,7 @@ export function Composer({
         {queuedSends && queuedSends.length > 0 ? (
           <div className="composer-queued">
             <span className="composer-queued-label">
-              排队 {queuedSends.length}
+              {t("composer.queueCount", { n: queuedSends.length })}
             </span>
             {queuedSends.map((text, i) => (
               <span key={i} className="composer-queue-chip" title={text}>
@@ -363,17 +363,17 @@ export function Composer({
                 </span>
               </span>
               <span>
-                <kbd>⏎</kbd> 排队 &nbsp;·&nbsp; <kbd>esc</kbd> 中断
+                <kbd>⏎</kbd> {t("composer.queue")} &nbsp;·&nbsp; <kbd>esc</kbd> {t("composer.interrupt")}
               </span>
             </>
           ) : (
             <>
               <span>
-                <kbd>/</kbd> 命令 &nbsp;·&nbsp; <kbd>@</kbd> 提及文件
-                &nbsp;·&nbsp; <kbd>⌘K</kbd> 命令面板
+                <kbd>/</kbd> {t("composer.commands")} &nbsp;·&nbsp; <kbd>@</kbd> {t("composer.mentionFiles")}
+                &nbsp;·&nbsp; <kbd>⌘K</kbd> {t("composer.commandPalette")}
               </span>
               <span>
-                <kbd>⏎</kbd> 发送 &nbsp; <kbd>⇧⏎</kbd> 换行
+                <kbd>⏎</kbd> {t("composer.send")} &nbsp; <kbd>⇧⏎</kbd> {t("composer.newline")}
               </span>
             </>
           )}
@@ -406,7 +406,7 @@ export function Composer({
           <textarea
             ref={textareaRef}
             value={draft}
-            placeholder="向 Agent 提问 / 安排任务…"
+            placeholder={t("composer.placeholder")}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             rows={2}
@@ -417,7 +417,7 @@ export function Composer({
             <button
               type="button"
               className="cf-btn"
-              title="插入文件 (@ 提及)"
+              title={t("composer.insertFile")}
               onClick={() => void attachFile()}
             >
               <span className="ico">
@@ -427,7 +427,7 @@ export function Composer({
             <button
               type="button"
               className="cf-btn"
-              title="插入图片 (@ 提及)"
+              title={t("composer.insertImage")}
               onClick={() => void attachFile("image")}
             >
               <span className="ico">
@@ -467,7 +467,7 @@ export function Composer({
                 type="button"
                 className="model-pill"
                 onClick={() => setModelMenuOpen((v) => !v)}
-                title="切换模型预设"
+                title={t("composer.switchPreset")}
               >
                 <I.brain size={12} />
                 <span>{modelLabel}</span>
@@ -490,7 +490,7 @@ export function Composer({
                 className="send-btn"
                 style={{ background: "var(--danger)" }}
                 onClick={onAbort}
-                title="中断"
+                title={t("composer.interrupt")}
               >
                 <I.stop size={14} />
               </button>
@@ -554,8 +554,8 @@ function Popup({
         <span className="tok">{kind === "slash" ? "/" : "@"}</span>
         <span>
           {kind === "slash"
-            ? "命令 — 控制 agent、模型与会话"
-            : "提及 — 工作区中的文件"}
+            ? t("composer.slashHeader")
+            : t("composer.atHeader")}
         </span>
         <span className="grow" />
         <span style={{ cursor: "pointer" }} onClick={onClose}>
@@ -572,7 +572,7 @@ function Popup({
               fontFamily: "IBM Plex Mono, monospace",
             }}
           >
-            无匹配项
+            {t("composer.noMatches")}
           </div>
         ) : null}
         {items.map((it, i) => (
@@ -611,13 +611,13 @@ function Popup({
       </div>
       <div className="popup-foot">
         <span>
-          <kbd>↑↓</kbd> 选择
+          <kbd>↑↓</kbd> {t("composer.select")}
         </span>
         <span>
-          <kbd>⏎</kbd> 确认
+          <kbd>⏎</kbd> {t("composer.confirm")}
         </span>
         <span>
-          <kbd>esc</kbd> 关闭
+          <kbd>esc</kbd> {t("composer.close")}
         </span>
       </div>
     </div>
@@ -645,7 +645,7 @@ function ModelMenu({
     >
       <div className="ph">
         <span className="tok">M</span>
-        <span>切换模型预设</span>
+        <span>{t("composer.switchPreset")}</span>
       </div>
       <div className="popup-list">
         {order.map((p) => (
