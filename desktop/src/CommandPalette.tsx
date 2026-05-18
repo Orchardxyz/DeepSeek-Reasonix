@@ -55,6 +55,7 @@ export type CommandHandlers = {
   about: () => void;
   abort: () => void;
   copyLast: () => void;
+  conversationCopy: () => void;
   exportMarkdown: () => void;
   pickWorkspace: () => void;
   newTab: () => void;
@@ -123,6 +124,14 @@ export function buildCommands(handlers: CommandHandlers): Command[] {
       hint: t("palette.copyLastHint"),
       icon: <ClipboardCopy size={13} />,
       run: handlers.copyLast,
+    });
+    list.push({
+      id: "copy-conv",
+      group: "action",
+      label: t("palette.copyConv"),
+      hint: t("palette.copyConvHint"),
+      icon: <ClipboardCopy size={13} />,
+      run: handlers.conversationCopy,
     });
     list.push({
       id: "export-md",
