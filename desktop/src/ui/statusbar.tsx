@@ -3,6 +3,7 @@ import { t } from "../i18n";
 import type { Balance, Settings, UsageStats } from "../App";
 import type { JobInfo } from "../protocol";
 import { THEME, type Theme } from "../theme";
+import { localizeShortcutText } from "./shortcut";
 
 function formatMoney(amount: number, currency: "CNY" | "USD"): string {
   const symbol = currency === "CNY" ? "¥" : "$";
@@ -63,19 +64,19 @@ export function StatusBar({
         <span>{settings?.baseUrl?.replace(/^https?:\/\//, "") ?? "api.deepseek.com"}</span>
         <span className="v">{!ready ? t("statusbar.offline") : busy ? t("statusbar.busy") : t("statusbar.online")}</span>
       </span>
-      <span className="seg" title="cache hit">
+      <span className="seg" title={t("statusbar.cacheHit")}>
         <I.zap size={11} style={{ color: "var(--accent)" }} />
-        <span>cache</span>
+        <span>{t("statusbar.cache")}</span>
         <span className="v acc">{cacheHitPct}%</span>
       </span>
       <span className="seg">
         <I.cpu size={11} />
-        <span>tokens</span>
+        <span>{t("statusbar.tokens")}</span>
         <span className="v">{tokenLabel(totalTokens)}</span>
       </span>
       <span className="seg">
         <I.coin size={11} />
-        <span>本次</span>
+        <span>{t("statusbar.thisTurn")}</span>
         <span className="v ok">{spent}</span>
       </span>
 
@@ -84,7 +85,7 @@ export function StatusBar({
       <span
         className={`seg jobs ${jobsOpen ? "active" : ""}`}
         onClick={onToggleJobs}
-        title={t("statusbar.jobsTip")}
+        title={localizeShortcutText(t("statusbar.jobsTip"))}
       >
         <I.cpu size={11} />
         <span>{t("statusbar.jobs")}</span>
@@ -94,7 +95,7 @@ export function StatusBar({
       {settings?.workspaceDir ? (
         <span
           className="seg"
-          title={`切换工作区 · ${settings.workspaceDir}`}
+          title={t("statusbar.switchWorkspace", { workspace: settings.workspaceDir })}
           style={onOpenWorkdir ? { cursor: "pointer" } : undefined}
           onClick={(e) => {
             if (!onOpenWorkdir) return;
@@ -114,14 +115,16 @@ export function StatusBar({
         <I.brain size={11} style={{ color: "var(--violet)" }} />
         <span className="v vio">{settings?.model ?? "—"}</span>
       </span>
-      <span className="seg" title="切换货币 (CNY / USD)" onClick={onToggleCurrency}>
+      <span className="seg" title={t("statusbar.switchCurrency")} onClick={onToggleCurrency}>
         <I.coin size={11} />
-        <span>余额</span>
+        <span>{t("statusbar.balance")}</span>
         <span className="v ok">{balanceLabel}</span>
       </span>
-      <span className="seg" title="切换主题" onClick={onToggleTheme}>
+      <span className="seg" title={t("statusbar.switchTheme")} onClick={onToggleTheme}>
         {theme === THEME.DARK ? <I.moon size={11} /> : <I.sun size={11} />}
-        <span className="v">{theme === THEME.DARK ? "深色" : "浅色"}</span>
+        <span className="v">
+          {theme === THEME.DARK ? t("statusbar.themeDark") : t("statusbar.themeLight")}
+        </span>
       </span>
     </footer>
   );

@@ -15,7 +15,7 @@
   &nbsp;·&nbsp;
   <a href="./benchmarks/">Benchmarks</a>
   &nbsp;·&nbsp;
-  <a href="https://discord.gg/XF78rEME2D">Discord</a>
+  <strong><a href="https://discord.gg/XF78rEME2D">Discord</a></strong>
 </p>
 
 <p align="center">
@@ -54,6 +54,9 @@
 
 > [!NOTE]
 > **Real user, single day (2026-05-01):** 435M input tokens, **99.82% cache hit**, ~$12 instead of the ~$61 the same workload would cost with no cache on `v4-flash` — see the [case study](./benchmarks/real-world-cache/README.md). DeepSeek provides the cacheable bytes; the four mechanisms in [Pillar 1](./docs/ARCHITECTURE.md#pillar-1--cache-first-loop) are how Reasonix keeps them cacheable across long sessions.
+
+> [!IMPORTANT]
+> **Community · 加入社区** — bilingual Discord with channels for setup help (`#help` / `#求助`), workflow showcases, feature ideas, and contributor-only PR coordination. Verify your GitHub in-server to get the **Contributor** role automatically. → **<https://discord.gg/XF78rEME2D>**
 
 <br/>
 
@@ -235,7 +238,7 @@ For live cache-hit rates, costs, and methodology, see [`benchmarks/`](./benchmar
 ## Community
 
 > [!NOTE]
-> Reasonix is open source and community-developed. The contributors wall below isn't decoration — every avatar is a real PR that shipped.
+> Reasonix is open source and community-developed. Every avatar in the Acknowledgments wall at the bottom of this file is a real PR that shipped.
 
 Scoped starter tickets — each with background, code pointers, acceptance criteria, and hints — live under the [`good first issue`](https://github.com/esengine/reasonix/labels/good%20first%20issue) label. Pick anything open.
 
@@ -254,12 +257,6 @@ Scoped starter tickets — each with background, code pointers, acceptance crite
 </p>
 
 **Before your first PR**: read [`CONTRIBUTING.md`](./CONTRIBUTING.md) — short, strict rules (comments, errors, libraries-over-hand-rolled). `tests/comment-policy.test.ts` enforces the comment ones; `npm run verify` is the pre-push gate. By participating you agree to the [Code of Conduct](./CODE_OF_CONDUCT.md). Security issues → [SECURITY.md](./SECURITY.md).
-
-<p align="center">
-  <a href="https://github.com/esengine/reasonix/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=esengine/DeepSeek-Reasonix&max=100&columns=12" alt="Contributors to esengine/DeepSeek-Reasonix" width="860"/>
-  </a>
-</p>
 
 <br/>
 
@@ -287,12 +284,39 @@ Scoped starter tickets — each with background, code pointers, acceptance crite
 
 <br/>
 
+## Acknowledgments
+
+A small list of folks whose work has shaped Reasonix the most — measured
+by both commit count and code volume. **Listed alphabetically, no ordering
+of importance.** The full contributor graph is on
+[GitHub](https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors).
+
+- [**ctharvey**](https://github.com/ctharvey)
+- [**dimasd-angga**](https://github.com/dimasd-angga) (Dimas D. Angga)
+- [**Evan-Pycraft**](https://github.com/Evan-Pycraft)
+- [**ForeverYoungPp**](https://github.com/ForeverYoungPp)
+- [**GTC2080**](https://github.com/GTC2080) (TaoMu)
+- [**kabaka9527**](https://github.com/kabaka9527)
+- [**lisniuse**](https://github.com/lisniuse) (Richie)
+- [**wade19990814-hue**](https://github.com/wade19990814-hue)
+- [**wviana**](https://github.com/wviana) (Wesley Viana)
+
+Also a separate thank-you to [**Bernardxu123**](https://github.com/Bernardxu123)
+for designing the project logo (see [`docs/brand/`](./docs/brand/)), and to
+[AIGC Link](https://xhslink.com/m/80ngts127cA) for promoting the project on XiaoHongShu.
+
+<p align="center">
+  <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=esengine/DeepSeek-Reasonix&max=100&columns=12" alt="Contributors to esengine/DeepSeek-Reasonix" width="860"/>
+  </a>
+</p>
+
+<br/>
+
 ---
 
 <p align="center">
   <sub>MIT — see <a href="./LICENSE">LICENSE</a></sub>
   <br/>
-  <sub>Built by the community at <a href="https://github.com/esengine/reasonix/graphs/contributors">esengine/reasonix</a></sub>
-  <br/>
-  <sub>Special thanks to <a href="https://xhslink.com/m/80ngts127cA">AIGC Link</a> for the promotions on XiaoHongShu.</sub>
+  <sub>Built by the community at <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">esengine/DeepSeek-Reasonix</a></sub>
 </p>

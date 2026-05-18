@@ -12,23 +12,24 @@ import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import { t, type TKey } from "../i18n";
 import { I } from "../icons";
 import { fmtElapsed } from "./live";
+import { Shortcut } from "./shortcut";
 
 export type PresetName = "auto" | "flash" | "pro";
 export type EditMode = "review" | "auto" | "yolo";
 
 type PresetEntry = { label: string; badge: string; desc: TKey };
-type ModeEntry = { k: EditMode; label: string; icon: React.ReactNode; hint: TKey };
+type ModeEntry = { k: EditMode; label: TKey; icon: React.ReactNode; hint: TKey };
 
 const PRESET_INFO: Record<PresetName, PresetEntry> = {
   auto: { label: "auto", badge: "AUTO", desc: "preset.autoDesc" },
-  flash: { label: "deepseek-v4-flash", badge: "FLASH", desc: "preset.flashDesc" },
-  pro: { label: "deepseek-v4-pro", badge: "PRO", desc: "preset.proDesc" },
+  flash: { label: "v4-flash", badge: "FLASH", desc: "preset.flashDesc" },
+  pro: { label: "v4-pro", badge: "PRO", desc: "preset.proDesc" },
 };
 
 const MODE_INFO: ModeEntry[] = [
-  { k: "review", label: "Review", icon: <I.shield size={11} />, hint: "editMode.reviewHint" },
-  { k: "auto", label: "Auto", icon: <I.zap size={11} />, hint: "editMode.autoHint" },
-  { k: "yolo", label: "YOLO", icon: <I.warn size={11} />, hint: "editMode.yoloHint" },
+  { k: "review", label: "editMode.review", icon: <I.shield size={11} />, hint: "editMode.reviewHint" },
+  { k: "auto", label: "editMode.auto", icon: <I.zap size={11} />, hint: "editMode.autoHint" },
+  { k: "yolo", label: "editMode.yolo", icon: <I.warn size={11} />, hint: "editMode.yoloHint" },
 ];
 
 export function ModeSwitch({
@@ -51,7 +52,7 @@ export function ModeSwitch({
           title={t(m.hint)}
         >
           {m.icon}
-          <span>{m.label}</span>
+          <span>{t(m.label)}</span>
         </button>
       ))}
     </div>
@@ -248,7 +249,7 @@ export function Composer({
       base.unshift({
         name: "..",
         kind: "dir",
-        desc: parent ? `↑ ${parent}` : "↑ workspace root",
+        desc: parent ? `↑ ${parent}` : `↑ ${t("composer.workspaceRoot")}`,
       });
     }
     return base;
@@ -418,20 +419,23 @@ export function Composer({
               <ModeSwitch mode={editMode} onChange={onEditModeChange} />
               <span className="hint-sep" />
               <span>
-                <kbd>⏎</kbd> {t("composer.queue")} &nbsp;·&nbsp; <kbd>esc</kbd> {t("composer.interrupt")}
+                <Shortcut keys={["enter"]} /> {t("composer.queue")} &nbsp;·&nbsp;{" "}
+                <Shortcut keys={["esc"]} /> {t("composer.interrupt")}
               </span>
             </>
           ) : (
             <>
               <span>
-                <kbd>/</kbd> {t("composer.commands")} &nbsp;·&nbsp; <kbd>@</kbd> {t("composer.mentionFiles")}
-                &nbsp;·&nbsp; <kbd>⌘K</kbd> {t("composer.commandPalette")}
+                <Shortcut keys={["/"]} /> {t("composer.commands")} &nbsp;·&nbsp;{" "}
+                <Shortcut keys={["@"]} /> {t("composer.mentionFiles")}
+                &nbsp;·&nbsp; <Shortcut keys={["mod", "K"]} /> {t("composer.commandPalette")}
               </span>
               <span className="grow" />
               <ModeSwitch mode={editMode} onChange={onEditModeChange} />
               <span className="hint-sep" />
               <span>
-                <kbd>⏎</kbd> {t("composer.send")} &nbsp; <kbd>⇧⏎</kbd> {t("composer.newline")}
+                <Shortcut keys={["enter"]} /> {t("composer.send")} &nbsp;{" "}
+                <Shortcut keys={["shift", "enter"]} /> {t("composer.newline")}
               </span>
             </>
           )}
@@ -500,7 +504,7 @@ export function Composer({
               <span className="ico">
                 <I.slash size={14} />
               </span>
-              <span className="label">commands</span>
+              <span className="label">{t("composer.commandsLabel")}</span>
             </button>
             <button
               type="button"
@@ -513,7 +517,7 @@ export function Composer({
               <span className="ico">
                 <I.at size={14} />
               </span>
-              <span className="label">mention</span>
+              <span className="label">{t("composer.mentionLabel")}</span>
             </button>
 
             <span className="grow" />
@@ -667,13 +671,13 @@ function Popup({
       </div>
       <div className="popup-foot">
         <span>
-          <kbd>↑↓</kbd> {t("composer.select")}
+          <Shortcut keys={["updown"]} /> {t("composer.select")}
         </span>
         <span>
-          <kbd>⏎</kbd> {t("composer.confirm")}
+          <Shortcut keys={["enter"]} /> {t("composer.confirm")}
         </span>
         <span>
-          <kbd>esc</kbd> {t("composer.close")}
+          <Shortcut keys={["esc"]} /> {t("composer.close")}
         </span>
       </div>
     </div>

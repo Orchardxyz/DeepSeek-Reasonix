@@ -15,7 +15,7 @@
   &nbsp;·&nbsp;
   <a href="./benchmarks/">基准测试</a>
   &nbsp;·&nbsp;
-  <a href="https://discord.gg/XF78rEME2D">Discord</a>
+  <strong><a href="https://discord.gg/XF78rEME2D">Discord</a></strong>
 </p>
 
 <p align="center">
@@ -51,6 +51,9 @@
 
 > [!TIP]
 > **缓存稳定不是开关，而是循环要围绕设计的不变量。** 这就是 Reasonix 只支持 DeepSeek 的根本原因 —— 每一层都为 DeepSeek 字节稳定的前缀缓存机制调过。
+
+> [!IMPORTANT]
+> **加入社区 · Community** — 中英双语 Discord，频道包括 `#求助` / `#help`、`#分享` / `#showcase`、`#想法反馈`、贡献者专属 PR 协调区。在群内绑定 GitHub 后自动识别贡献者身份。→ **<https://discord.gg/XF78rEME2D>**
 
 <br/>
 
@@ -205,7 +208,7 @@ npx reasonix code --dir /path/to/project
 ## 社区
 
 > [!NOTE]
-> Reasonix 是开源、社区共建的项目。下面贡献者墙不是装饰 —— 每一个头像都对应一次真实合并的 PR。
+> Reasonix 是开源、社区共建的项目。文末"致谢"那面贡献者墙上的每一个头像，都对应一次真实合并的 PR。
 
 给新手准备的入门 issue —— 每个都带背景说明、代码定位、验收标准、提示 —— 全部挂在 [`good first issue`](https://github.com/esengine/reasonix/labels/good%20first%20issue) 标签下。挑任意一个还没人认领的就行。
 
@@ -224,12 +227,6 @@ npx reasonix code --dir /path/to/project
 </p>
 
 **第一次提 PR 之前**：先读 [`CONTRIBUTING.md`](./CONTRIBUTING.md) —— 短小、严格的项目规则（注释、错误处理、用现成库不手写）。`tests/comment-policy.test.ts` 静态强制执行注释那部分，`npm run verify` 是 push 前的闸。参与本项目即同意 [行为准则](./CODE_OF_CONDUCT.md)。安全相关问题请走 [SECURITY.md](./SECURITY.md)。
-
-<p align="center">
-  <a href="https://github.com/esengine/reasonix/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=esengine/DeepSeek-Reasonix&max=100&columns=12" alt="esengine/DeepSeek-Reasonix 贡献者" width="860"/>
-  </a>
-</p>
 
 <br/>
 
@@ -257,10 +254,37 @@ npx reasonix code --dir /path/to/project
 
 <br/>
 
+## 致谢
+
+下面这些朋友的工作塑造了 Reasonix 今天的样子 —— 综合 commit 数和代码量两个维度。
+**按字母顺序排列，排名不分先后。** 完整贡献者列表在
+[GitHub](https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors)。
+
+- [**ctharvey**](https://github.com/ctharvey)
+- [**dimasd-angga**](https://github.com/dimasd-angga)（Dimas D. Angga）
+- [**Evan-Pycraft**](https://github.com/Evan-Pycraft)
+- [**ForeverYoungPp**](https://github.com/ForeverYoungPp)
+- [**GTC2080**](https://github.com/GTC2080)（TaoMu）
+- [**kabaka9527**](https://github.com/kabaka9527)
+- [**lisniuse**](https://github.com/lisniuse)（Richie）
+- [**wade19990814-hue**](https://github.com/wade19990814-hue)
+- [**wviana**](https://github.com/wviana)（Wesley Viana）
+
+另外特别感谢 [**Bernardxu123**](https://github.com/Bernardxu123) 设计的项目 logo
+（见 [`docs/brand/`](./docs/brand/)），以及 [AIGC Link](https://xhslink.com/m/80ngts127cA) 在小红书上的推广。
+
+<p align="center">
+  <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=esengine/DeepSeek-Reasonix&max=100&columns=12" alt="esengine/DeepSeek-Reasonix 贡献者" width="860"/>
+  </a>
+</p>
+
+<br/>
+
 ---
 
 <p align="center">
   <sub>MIT —— 见 <a href="./LICENSE">LICENSE</a></sub>
   <br/>
-  <sub>由 <a href="https://github.com/esengine/reasonix/graphs/contributors">esengine/reasonix</a> 社区共建</sub>
+  <sub>由 <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">esengine/DeepSeek-Reasonix</a> 社区共建</sub>
 </p>

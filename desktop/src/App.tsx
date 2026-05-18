@@ -42,6 +42,7 @@ import { useElapsed } from "./ui/live";
 import { AboutModal } from "./ui/about";
 import { SettingsModal, type PageId as SettingsPageId } from "./ui/settings";
 import { Sidebar } from "./ui/sidebar";
+import { Shortcut, localizeShortcutText, shortcutText } from "./ui/shortcut";
 import { Splash, shouldShowSplash } from "./ui/splash";
 import { StatusBar } from "./ui/statusbar";
 import {
@@ -263,6 +264,20 @@ type Action =
   | { t: "enqueue_send"; text: string }
   | { t: "dequeue_send"; index: number }
   | { t: "shift_queued_send" };
+
+function fallbackSkillDesc(skill: SkillInfo): string {
+  const scope =
+    skill.scope === "builtin"
+      ? t("app.skill.scope.builtin")
+      : skill.scope === "global"
+        ? t("app.skill.scope.global")
+        : t("app.skill.scope.project");
+  const runAs =
+    skill.runAs === "subagent"
+      ? t("app.skill.runAs.subagent")
+      : t("app.skill.runAs.inline");
+  return t("app.skill.generic", { scope, runAs });
+}
 
 function reduce(state: State, action: Action): State {
   switch (action.t) {
@@ -619,7 +634,11 @@ function applyIncoming(state: State, ev: IncomingEvent): State {
     case "$sessions":
       return { ...state, sessions: ev.items };
     case "$mcp_specs":
-      return { ...state, mcpSpecs: ev.specs, mcpBridged: ev.bridged };
+      return {
+        ...state,
+        mcpSpecs: Array.isArray(ev.specs) ? ev.specs : [],
+        mcpBridged: Boolean(ev.bridged),
+      };
     case "$skills":
       return { ...state, skills: ev.items };
     case "$ctx_breakdown":
@@ -723,6 +742,25 @@ function applyIncoming(state: State, ev: IncomingEvent): State {
         sessionFiles,
         activeSkill: null,
         queuedSends: [],
+      };
+    }
+    case "$session_empty": {
+      // The sidecar successfully ran loadSessionMessages but the jsonl is
+      // empty / all-malformed. Without this, the click looks like a no-op
+      // because the chat just re-renders empty. Issue #1179.
+      const sizeNote = ev.sizeBytes === 0 ? "0 bytes" : `${ev.sizeBytes} bytes, no valid entries`;
+      return {
+        ...state,
+        messages: [
+          ...state.messages,
+          {
+            kind: "error",
+            message:
+              `Session "${ev.name}" loaded with no messages (${sizeNote}). ` +
+              `The file ~/.reasonix/sessions/${ev.name}.jsonl exists but couldn't be parsed — ` +
+              `start a new chat or restore from .jsonl.bak if you have one.`,
+          },
+        ],
       };
     }
     case "$error":
@@ -873,11 +911,11 @@ function formatConversationMarkdown(messages: ChatMessage[], userLabel: string):
           .map((s) => {
             if (s.kind === "text") return s.text;
             if (s.kind === "reasoning")
-              return `<details>\n<summary>Reasoning</summary>\n\n${s.text}\n\n</details>`;
+              return `<details>\n<summary>${t("app.exportReasoningSummary")}</summary>\n\n${s.text}\n\n</details>`;
             if (s.kind === "tool") {
               const arg = s.args ? `\n\n\`\`\`json\n${s.args}\n\`\`\`` : "";
               const res = s.result ? `\n\n\`\`\`\n${s.result}\n\`\`\`` : "";
-              return `> **Tool · \`${s.name}\`**${arg}${res}`;
+              return `> **${t("app.exportToolLabel")} · \`${s.name}\`**${arg}${res}`;
             }
             return "";
           })
@@ -1063,7 +1101,7 @@ function TabRuntime({
       const picked = await openDialog({
         directory: true,
         multiple: false,
-        title: "Pick workspace directory",
+        title: t("workdir.title"),
         defaultPath: state.settings?.workspaceDir,
       });
       if (typeof picked === "string" && picked.length > 0) {
@@ -1287,7 +1325,7 @@ function TabRuntime({
     },
     focusComposer: () => composerRef.current?.focus(),
     openSettings: () => openSettingsAt("general"),
-    about: () => flashToast(`Reasonix · ${state.settings?.version ?? "dev"}`),
+    about: () => setAboutOpen(true),
     abort,
     copyLast: () => {
       const last = [...state.messages].reverse().find((m) => m.kind === "assistant");
@@ -1325,7 +1363,7 @@ function TabRuntime({
         composerRef.current?.focus();
       },
     },
-    { cmd: "/new", desc: t("app.cmd.newSession"), run: () => newChat(), kb: "⌘N" },
+    { cmd: "/new", desc: t("app.cmd.newSession"), run: () => newChat(), kb: shortcutText(["mod", "N"]) },
     { cmd: "/clear", desc: t("app.cmd.clearChat"), run: () => dispatch({ t: "clear" }) },
     { cmd: "/abort", desc: t("app.cmd.abort"), run: () => abort(), kb: "esc" },
     {
@@ -1369,7 +1407,7 @@ function TabRuntime({
     },
     ...state.skills.map((s) => ({
       cmd: `/${s.name}`,
-      desc: s.description || `skill · ${s.scope}`,
+      desc: s.description?.trim() || fallbackSkillDesc(s),
       run: () => {
         dispatch({
           t: "start_skill",
@@ -1960,7 +1998,7 @@ function TitleBar({
           type="button"
           className="iconbtn"
           data-on={sideOn}
-          title={t("app.titlebar.sidebar")}
+          title={localizeShortcutText(t("app.titlebar.sidebar"))}
           onClick={onToggleSide}
         >
           <I.panel_l size={14} />
@@ -2012,7 +2050,9 @@ function TitleBar({
                 <div className="popup-item" onClick={() => { onOpenCommands(); setMenuOpen(false); }}>
                   <span className="ico"><I.search size={12} /></span>
                   <div className="nm"><span>{t("app.titlebar.commandPalette")}</span></div>
-                  <span className="kb">⌘K</span>
+                  <span className="kb">
+                    <Shortcut keys={["mod", "K"]} />
+                  </span>
                 </div>
                 <div
                   className="popup-item"
@@ -2037,7 +2077,9 @@ function TitleBar({
                 <div className="popup-item" onClick={() => { onOpenSettings(); setMenuOpen(false); }}>
                   <span className="ico"><I.cog size={12} /></span>
                   <div className="nm"><span>{t("app.titlebar.settings")}</span></div>
-                  <span className="kb">⌘,</span>
+                  <span className="kb">
+                    <Shortcut keys={["mod", ","]} />
+                  </span>
                 </div>
               </div>
             </div>
@@ -2127,7 +2169,7 @@ function TabBar({
           </div>
         );
       })}
-      <div className="tab newtab" title={t("app.tab.newTabTitle")} onClick={onNew}>
+      <div className="tab newtab" title={localizeShortcutText(t("app.tab.newTabTitle"))} onClick={onNew}>
         <I.plus size={12} />
         <span style={{ fontSize: 11, marginLeft: 4 }}>{t("app.tab.newTab")}</span>
       </div>

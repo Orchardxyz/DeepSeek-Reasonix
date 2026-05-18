@@ -16,6 +16,7 @@ import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { CodeView } from "./CodeView";
+import { t, useLang } from "./i18n";
 
 async function openWithEditor(
   editor: string | undefined,
@@ -43,12 +44,17 @@ function resolveAgainstWorkspace(rel: string, ws: string | undefined): string {
 
 const KNOWN_EXTS =
   "ts|tsx|mts|cts|js|jsx|mjs|cjs|py|pyi|rs|go|json|jsonc|md|mdx|css|scss|less|html|htm|xml|svg|yaml|yml|toml|sh|bash|zsh|fish|sql|rb|java|kt|swift|c|cpp|cc|cxx|h|hpp|hxx|cs|php|lua|dart|ex|exs|erl|hs|clj|cljs|zig|vue|svelte|graphql|gql|proto";
+// No lookbehind here — Tauri's WKWebView on macOS Monterey (Safari < 16.4)
+// can't parse `(?<=...)` and the whole bundle fails to load with an
+// "invalid group specifier name" error. Capture the leading char as
+// group 1 instead and let splitFilePaths skip past it. Issue #1209.
 const FILE_PATH_RE = new RegExp(
-  `(?:^|(?<=[\\s\`'"(\\[]))((?:[\\w.-]+\\/)+[\\w.-]+\\.(?:${KNOWN_EXTS}))(?::(\\d+(?:-\\d+)?))?(?=[\\s.,;!?\\]\\)'"\`]|$)`,
+  `(^|[\\s\`'"(\\[])((?:[\\w.-]+\\/)+[\\w.-]+\\.(?:${KNOWN_EXTS}))(?::(\\d+(?:-\\d+)?))?(?=[\\s.,;!?\\]\\)'"\`]|$)`,
   "g",
 );
 
 function FilePill({ path, line }: { path: string; line?: string }) {
+  useLang();
   const ctx = useContext(WorkspaceContext);
   const [done, setDone] = useState<"open" | "copy" | null>(null);
   const display = line ? `${path}:${line}` : path;
@@ -95,7 +101,7 @@ function FilePill({ path, line }: { path: string; line?: string }) {
           void openInEditor();
         }
       }}
-      title="click to open · right-click to copy"
+      title={t("markdown.filePillTitle")}
     >
       <FileText size={10} className="file-pill-icon" />
       <span className="file-pill-path">{path}</span>
@@ -111,9 +117,13 @@ function splitFilePaths(text: string): ReactNode[] | string {
   let last = 0;
   let m: RegExpExecArray | null = FILE_PATH_RE.exec(text);
   while (m !== null) {
-    if (m.index > last) out.push(text.slice(last, m.index));
-    out.push(<FilePill key={`fp-${m.index}`} path={m[1]!} line={m[2]} />);
-    last = m.index + m[0].length;
+    const prefix = m[1] ?? "";
+    const path = m[2]!;
+    const line = m[3];
+    const pillStart = m.index + prefix.length;
+    if (pillStart > last) out.push(text.slice(last, pillStart));
+    out.push(<FilePill key={`fp-${pillStart}`} path={path} line={line} />);
+    last = pillStart + path.length + (line ? line.length + 1 : 0);
     m = FILE_PATH_RE.exec(text);
   }
   if (out.length === 0) return text;
@@ -166,6 +176,7 @@ export const Markdown = memo(function Markdown({ source }: { source: string }) {
 });
 
 function SafeLink({ href, children }: { href?: string; children: ReactNode }) {
+  useLang();
   const ctx = useContext(WorkspaceContext);
   const [done, setDone] = useState(false);
   const isExternal = !!href && /^https?:\/\//i.test(href);
@@ -199,7 +210,11 @@ function SafeLink({ href, children }: { href?: string; children: ReactNode }) {
       href={href ?? "#"}
       onClick={onClick}
       className={`md-link ${isExternal ? "external" : "local"} ${done ? "done" : ""}`}
-      title={isExternal ? `open ${href} in browser` : `open ${href}`}
+      title={
+        isExternal
+          ? t("markdown.externalLinkTitle", { href: href ?? "" })
+          : t("markdown.localLinkTitle", { href: href ?? "" })
+      }
     >
       {children}
       {isExternal ? (
@@ -212,6 +227,7 @@ function SafeLink({ href, children }: { href?: string; children: ReactNode }) {
 }
 
 function CodeBlock({ lang, text }: { lang: string; text: string }): ReactNode {
+  useLang();
   const [copied, setCopied] = useState(false);
   const onCopy = async () => {
     try {
@@ -228,7 +244,7 @@ function CodeBlock({ lang, text }: { lang: string; text: string }): ReactNode {
         <span className="codeblock-lang">{lang}</span>
         <button type="button" className={`copy-btn ${copied ? "done" : ""}`} onClick={onCopy}>
           {copied ? <Check size={11} /> : <Copy size={11} />}
-          {copied ? "copied" : "copy"}
+          {copied ? t("markdown.copied") : t("markdown.copy")}
         </button>
       </div>
       <CodeView text={text} lang={lang} />
